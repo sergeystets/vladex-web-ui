@@ -23,13 +23,15 @@ export default {
         {name: "Теорема Эскобара"},
         {name: "May the force be with you"},
         {name: "Харьков 1654"},
-        {name: "Naked Balls"},
         {name: "Chat 1"},
         {name: "Chat 2"},
         {name: "Chat 3"},
         {name: "Chat 4"},
         {name: "Chat 5"},
         {name: "Chat 6"},
+        {name: "Chat 7"},
+        {name: "Chat 8"},
+        {name: "Chat 9"},
       ]
     }
   }

@@ -85,34 +85,10 @@ export default {
       return items
     },
     userIsAuthenticated() {
-      return true
+      return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
     },
     contacts() {
-      return [
-        {
-          user: {
-            id: 1,
-            username: "Pavel Burykh",
-            online: true,
-            avatar: "https://randomuser.me/api/portraits/men/79.jpg"
-          }
-        },
-        {
-          user: {
-            id: 2,
-            username: "Valeriia Stets",
-            online: true,
-            avatar: "https://randomuser.me/api/portraits/women/57.jpg"
-          }
-        },
-        {
-          user: {
-            id: 3,
-            username: "Andrii Chupyr",
-            online: false,
-            avatar: "https://randomuser.me/api/portraits/men/56.jpg"
-          }
-        }];
+      return this.$store.getters.contacts;
     }
   }
 }

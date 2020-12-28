@@ -32,6 +32,7 @@ export default {
   ],
   mounted() {
     this.loadChat();
+    this.$store.dispatch('loadContacts')
   },
   components: {
     'chats': Chats,
