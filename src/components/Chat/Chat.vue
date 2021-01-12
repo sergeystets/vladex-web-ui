@@ -73,7 +73,7 @@ export default {
 
     sendMessage() {
       if (this.content !== '') {
-        this.chatMessages.push({id: this.id, content: this.content, user: {id: 42, username: "Sergii Stets"}})
+        this.chatMessages.push({id: this.id, content: this.content, user: this.$store.getters.user})
         this.content = '';
         this.scrollToEnd();
       }
