@@ -1,28 +1,13 @@
-import api from '../vladex-api'
+import api from "@/vladex-api";
 
 const AuthModule = {
   state: {
     user: null,
-    phone: null,
-    verifyPhoneLoading: false,
-    loadingOtp: false,
-    otpExpirationSeconds: null
   },
   mutations: {
-    setVerifyPhoneLoading(state, payload) {
-      state.verifyPhoneLoading = payload
-    },
     setUser(state, payload) {
+      localStorage.setItem("user", JSON.stringify(payload));
       state.user = payload
-    },
-    setPhone(state, payload) {
-      state.phone = payload
-    },
-    setLoadingOtp(state, payload) {
-      state.loadingOtp = payload
-    },
-    setOtpExpirationSeconds(state, payload) {
-      state.otpExpirationSeconds = payload
     },
     initializeStore(state) {
       state.user = JSON.parse(localStorage.getItem("user"));
@@ -30,40 +15,36 @@ const AuthModule = {
   }
   ,
   actions: {
-    verifyPhone({commit}, payload) {
-      commit('setVerifyPhoneLoading', true)
-      api.login(payload.phone).then(function (response) {
-        commit('setVerifyPhoneLoading', false)
-        commit('setPhone', payload.phone);
-        commit('setOtpExpirationSeconds', response.data.otpExpirationSeconds)
-      });
+    singIn() {
+      window.location = process.env.VUE_APP_AUTH_URL + "/oauth/authorize"
+          + "?response_type=token"
+          + "&client_id=vladex-web-ui"
+          + "&scope=API"
+          + "&redirect_uri=" + window.location.origin + "/sign-in/success"
+          + "&grant_type=implicit"
     },
-    verifyOtp({commit}, payload) {
-      commit('setLoadingOtp', true)
-      setTimeout(function () {
-        commit('setLoadingOtp', false)
-        let user = {user: {id: 42, username: "Sergii Stets"}};
-        localStorage.setItem("user", JSON.stringify(user));
-        commit("setUser", user);
-      }, 4000);
 
+    singInSuccess({commit}) {
+      let queryStringToJson = function (query) {
+        if (query === "") {
+          return {};
+        }
+        let segments = query.split("&").map(s => s.split("="));
+        let json = {};
+        segments.forEach(s => json[s[0]] = s[1]);
+        return json;
+      }
+
+      let token = queryStringToJson(window.location.hash.replace("#", ''));
+      api.getUserInfo(token).then(user => {
+        user.data.token = token;
+        commit("setUser", user.data);
+      });
     }
   },
   getters: {
     user(state) {
       return state.user;
-    },
-    verifyPhoneLoading(state) {
-      return state.verifyPhoneLoading;
-    },
-    loadingOtp(state) {
-      return state.loadingOtp;
-    },
-    phone(state) {
-      return state.phone;
-    },
-    otpExpirationSeconds(state) {
-      return state.otpExpirationSeconds;
     }
   }
 }
