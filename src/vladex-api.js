@@ -10,8 +10,7 @@ export default {
   getUserInfo(token) {
     return AXIOS.get("/v1/me", {
       headers: {
-        'Authorization': 'Bearer ' + token.access_token,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ' + token.access_token
       }
     });
   }
