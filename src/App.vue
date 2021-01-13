@@ -12,7 +12,7 @@
         </v-list-item>
       </v-list>
       <v-list>
-        <v-list-item avatar v-for="user in contacts" v-bind:key="user.username">
+        <v-list-item v-for="user in contacts" v-bind:key="user.username">
 
           <!--online-->
           <v-badge v-show="user.online"
