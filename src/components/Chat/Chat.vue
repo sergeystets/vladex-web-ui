@@ -9,7 +9,8 @@
           <message :messages="messages"></message>
         </div>
         <div class="typer">
-            <input type="text" placeholder="Type here..." v-on:keyup.enter="sendMessage" v-model="content">
+          <input type="text" placeholder="Type here..." v-on:keyup.enter="sendMessage"
+                 v-model="content">
         </div>
       </v-col>
     </v-row>
@@ -19,6 +20,7 @@
 <script>
 import Chats from './parts/Chats.vue'
 import Message from './parts/Message.vue'
+import api from '../../vladex-api'
 
 export default {
   data() {
@@ -43,25 +45,16 @@ export default {
       return this.chatMessages
     },
   },
+  watch: {
+    '$route.params.id'() {
+      this.loadChat()
+    }
+  },
   methods: {
     loadChat() {
-      this.chatMessages = [
-        {id: 1, content: "Hello :)", user: {id: 2, username: "Valeriia Stets"}},
-        {id: 2, content: "How are you?", user: {id: 2, username: "Valeriia Stets"}},
-        {id: 3, content: "Hey...", user: {id: 42, username: "Sergii Stets"}},
-        {id: 4, content: "I'm fine, thank you!", user: {id: 42, username: "Sergii Stets"}},
-        {id: 5, content: "What about you?", user: {id: 42, username: "Sergii Stets"}},
-        {id: 6, content: "H", user: {id: 42, username: "Sergii Stets"}},
-        {id: 7, content: "e", user: {id: 42, username: "Sergii Stets"}},
-        {id: 8, content: "l", user: {id: 42, username: "Sergii Stets"}},
-        {id: 9, content: "l", user: {id: 42, username: "Sergii Stets"}},
-        {id: 10, content: "o", user: {id: 42, username: "Sergii Stets"}},
-        {id: 11, content: ",", user: {id: 42, username: "Sergii Stets"}},
-        {id: 12, content: "How", user: {id: 42, username: "Sergii Stets"}},
-        {id: 13, content: "Are", user: {id: 42, username: "Sergii Stets"}},
-        {id: 14, content: "You", user: {id: 42, username: "Sergii Stets"}},
-        {id: 15, content: "?", user: {id: 42, username: "Sergii Stets"}},
-      ];
+      return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
+        this.chatMessages = res.data;
+      })
     },
 
     scrollToEnd() {

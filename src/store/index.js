@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import api from "@/vladex-api";
 
 import AuthModule from './AuthModule'
+import ChatModule from "@/store/ChatModule";
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
     auth: AuthModule,
+    chat: ChatModule,
   },
   state: {
     contacts: []
@@ -18,34 +21,11 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    loadContacts({commit}) {
-      commit('setContacts', [
-        {
-          user: {
-            id: 1,
-            username: "Pavel Burykh",
-            online: true,
-            avatar: "https://randomuser.me/api/portraits/men/79.jpg"
-          }
-        },
-        {
-          user: {
-            id: 2,
-            username: "Valeriia Stets",
-            online: true,
-            avatar: "https://randomuser.me/api/portraits/women/57.jpg"
-          }
-        },
-        {
-          user: {
-            id: 3,
-            username: "Andrii Chupyr",
-            online: false,
-            avatar: "https://randomuser.me/api/portraits/men/56.jpg"
-          }
-        }]
-      )
-    },
+    loadContacts(context) {
+      api.getContacts(context.getters.user.token).then(res => {
+        context.commit('setContacts', res.data);
+      })
+    }
   },
   getters: {
     contacts(state) {

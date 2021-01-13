@@ -13,5 +13,27 @@ export default {
         'Authorization': 'Bearer ' + token.access_token
       }
     });
+  },
+  getContacts(token) {
+    return AXIOS.get("/v1/contact", {
+      headers: {
+        'Authorization': 'Bearer ' + token.access_token
+      }
+    });
+  },
+  getChats(token) {
+    return AXIOS.get("/v1/chat", {
+      headers: {
+        'Authorization': 'Bearer ' + token.access_token
+      }
+    });
+  },
+
+  loadChat(token, id) {
+    return AXIOS.get("/v1/chat/" + id, {
+      headers: {
+        'Authorization': 'Bearer ' + token.access_token
+      }
+    });
   }
 }

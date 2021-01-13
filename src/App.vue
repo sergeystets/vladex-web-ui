@@ -12,10 +12,10 @@
         </v-list-item>
       </v-list>
       <v-list>
-        <v-list-item avatar v-for="user in contacts" v-bind:key="user.user.username">
+        <v-list-item v-for="user in contacts" v-bind:key="user.username">
 
           <!--online-->
-          <v-badge v-show="user.user.online"
+          <v-badge v-show="user.online"
                    bordered
                    bottom
                    color="green accent-4"
@@ -24,12 +24,12 @@
                    offset-y="10"
           >
             <v-list-item-avatar>
-              <img :src="user.user.avatar" alt="avatar"/>
+              <img :src="user.avatar" alt="avatar"/>
             </v-list-item-avatar>
           </v-badge>
 
           <!--offline-->
-          <v-badge v-show="!user.user.online"
+          <v-badge v-show="!user.online"
                    bordered
                    bottom
                    color="grey lighten-2"
@@ -38,12 +38,12 @@
                    offset-y="10"
           >
             <v-list-item-avatar>
-              <img :src="user.user.avatar" alt="avatar"/>
+              <img :src="user.avatar" alt="avatar"/>
             </v-list-item-avatar>
 
           </v-badge>
           <v-list-item-content>
-            <v-list-item-title>{{ user.user.username }}</v-list-item-title>
+            <v-list-item-title>{{ user.username }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -61,9 +61,9 @@
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <router-view></router-view>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
