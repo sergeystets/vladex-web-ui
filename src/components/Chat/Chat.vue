@@ -21,12 +21,15 @@
 import Chats from './parts/Chats.vue'
 import Message from './parts/Message.vue'
 import api from '../../vladex-api'
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
   data() {
     return {
       content: '',
-      chatMessages: []
+      chatMessages: [],
+      webSocketConnected: false
     }
   },
   props: [
@@ -35,6 +38,8 @@ export default {
   mounted() {
     this.loadChat();
     this.$store.dispatch('loadContacts')
+    this.connectToWsApi();
+
   },
   components: {
     'chats': Chats,
@@ -51,6 +56,27 @@ export default {
     }
   },
   methods: {
+    connectToWsApi() {
+      this.socket = new SockJS(process.env.VUE_APP_SERVER_URL + "/api/ws");
+      this.stompClient = Stomp.over(this.socket);
+      this.stompClient.connect(
+          {"X-Authorization": "Bearer " + this.$store.getters.user.token.access_token},
+          frame => {
+            this.webSocketConnected = true;
+            console.log("[ws][connect-frame] " + frame);
+            this.stompClient.subscribe("/topic/presence", tick => {
+              console.log("[ws][tick][/topic/presence] " + tick);
+              let presence = JSON.parse(tick.body);
+              this.$store.dispatch('updatePresence', presence)
+            });
+          },
+          error => {
+            console.log("[ws][error] " + error);
+            this.webSocketConnected = false;
+          }
+      );
+    },
+
     loadChat() {
       return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
         this.chatMessages = res.data;

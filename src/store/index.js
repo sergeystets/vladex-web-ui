@@ -25,6 +25,15 @@ export const store = new Vuex.Store({
       api.getContacts(context.getters.user.token).then(res => {
         context.commit('setContacts', res.data);
       })
+    },
+    updatePresence(context, presence) {
+      let contacts = context.getters.contacts;
+      contacts.forEach(function (contact) {
+        if (contact.id === presence.userId) {
+          contact.online = presence.online;
+        }
+      });
+      context.commit('setContacts', contacts);
     }
   },
   getters: {
