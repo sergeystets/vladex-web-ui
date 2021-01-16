@@ -4,6 +4,7 @@ import api from "@/vladex-api";
 
 import AuthModule from './AuthModule'
 import ChatModule from "@/store/ChatModule";
+import WsModule from "@/store/WsModule";
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ export const store = new Vuex.Store({
   modules: {
     auth: AuthModule,
     chat: ChatModule,
+    ws: WsModule,
   },
   state: {
     contacts: []

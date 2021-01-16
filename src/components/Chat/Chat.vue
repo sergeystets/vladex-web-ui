@@ -21,15 +21,12 @@
 import Chats from './parts/Chats.vue'
 import Message from './parts/Message.vue'
 import api from '../../vladex-api'
-import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
 
 export default {
   data() {
     return {
       content: '',
-      chatMessages: [],
-      webSocketConnected: false
+      chatMessages: []
     }
   },
   props: [
@@ -37,8 +34,8 @@ export default {
   ],
   mounted() {
     this.loadChat();
-    this.$store.dispatch('loadContacts')
-    this.connectToWsApi();
+    this.$store.dispatch('loadContacts');
+    this.$store.dispatch('connect');
 
   },
   components: {
@@ -47,52 +44,67 @@ export default {
   },
   computed: {
     messages() {
-      return this.chatMessages
+      return this.chatMessages;
     },
+    webSocketConnected() {
+      return this.$store.getters.webSocketConnected;
+    }
   },
   watch: {
-    '$route.params.id'() {
+    '$route.params.id'(value) {
       this.loadChat()
+      if (this.webSocketConnected) {
+        let id = Number.parseInt(value);
+        if (value) {
+          console.log("subscribing to '/topic/chat'...")
+          this.$store.getters.stompClient.subscribe("/topic/chat", tick => {
+            console.log("[ws][tick][/topic/chat] " + tick);
+            let message = JSON.parse(tick.body);
+            if (message.chatId === id) {
+              this.chatMessages.push(message);
+            }
+          });
+        }
+      }
+
+    },
+    webSocketConnected: {
+      handler(value) {
+        let id = Number.parseInt(this.id);
+        if (value) {
+          console.log("subscribing to '/topic/chat'...")
+          this.$store.getters.stompClient.subscribe("/topic/chat", tick => {
+            console.log("[ws][tick][/topic/chat] " + tick);
+            let message = JSON.parse(tick.body);
+            if (message.chatId === id) {
+              this.chatMessages.push(message);
+            }
+          });
+        }
+      },
+      deep: true
     }
   },
   methods: {
-    connectToWsApi() {
-      this.socket = new SockJS(process.env.VUE_APP_SERVER_URL + "/api/ws");
-      this.stompClient = Stomp.over(this.socket);
-      this.stompClient.connect(
-          {"X-Authorization": "Bearer " + this.$store.getters.user.token.access_token},
-          frame => {
-            this.webSocketConnected = true;
-            console.log("[ws][connect-frame] " + frame);
-            this.stompClient.subscribe("/topic/presence", tick => {
-              console.log("[ws][tick][/topic/presence] " + tick);
-              let presence = JSON.parse(tick.body);
-              this.$store.dispatch('updatePresence', presence)
-            });
-          },
-          error => {
-            console.log("[ws][error] " + error);
-            this.webSocketConnected = false;
-          }
-      );
-    },
 
     loadChat() {
       return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
         this.chatMessages = res.data;
       })
-    },
+    }
+    ,
 
     scrollToEnd() {
       this.$nextTick(() => {
-        var container = this.$el.querySelector('.chat-container')
-        container.scrollTop = container.scrollHeight
+        var container = this.$el.querySelector('.chat-container');
+        container.scrollTop = container.scrollHeight;
       })
-    },
+    }
+    ,
 
     sendMessage() {
       if (this.content !== '') {
-        this.chatMessages.push({id: this.id, content: this.content, user: this.$store.getters.user})
+        this.$store.dispatch('sendMessage', {content: this.content, chatId: this.id});
         this.content = '';
         this.scrollToEnd();
       }
