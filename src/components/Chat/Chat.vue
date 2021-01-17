@@ -54,45 +54,39 @@ export default {
     '$route.params.id'(value) {
       this.loadChat()
       if (this.webSocketConnected) {
-        let id = Number.parseInt(value);
         if (value) {
-          console.log("subscribing to '/topic/chat'...")
-          this.$store.getters.stompClient.subscribe("/topic/chat", tick => {
-            console.log("[ws][tick][/topic/chat] " + tick);
-            let message = JSON.parse(tick.body);
-            if (message.chatId === id) {
-              this.chatMessages.push(message);
-            }
-          });
+          this.subscribe();
         }
       }
 
     },
     webSocketConnected: {
       handler(value) {
-        let id = Number.parseInt(this.id);
         if (value) {
-          console.log("subscribing to '/topic/chat'...")
-          this.$store.getters.stompClient.subscribe("/topic/chat", tick => {
-            console.log("[ws][tick][/topic/chat] " + tick);
-            let message = JSON.parse(tick.body);
-            if (message.chatId === id) {
-              this.chatMessages.push(message);
-            }
-          });
+          this.subscribe();
         }
       },
       deep: true
     }
   },
   methods: {
+    subscribe() {
+      let id = Number.parseInt(this.id);
+      console.log("subscribing to '/user/queue/chat'...")
+      this.$store.getters.stompClient.subscribe("/user/queue/chat", tick => {
+        console.log("received tick from /user/queue/chat " + tick);
+        let message = JSON.parse(tick.body);
+        if (message.chatId === id) {
+          this.chatMessages.push(message);
+        }
+      });
+    },
 
     loadChat() {
       return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
         this.chatMessages = res.data;
       })
-    }
-    ,
+    },
 
     scrollToEnd() {
       this.$nextTick(() => {
