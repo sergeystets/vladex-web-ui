@@ -6,7 +6,11 @@
         <v-list-item-title v-html="chat.name"></v-list-item-title>
       </v-list-item-content>
       <v-list-item-action>
-        <v-icon>mdi-chat</v-icon>
+        <!--online-->
+        <v-badge v-show="chat.unreadMessages !== undefined && chat.unreadMessages.length > 0"
+                 :content="chat.unreadMessages ? chat.unreadMessages.length: 0"
+                 color="grey darken-1"
+        ></v-badge>
       </v-list-item-action>
     </v-list-item>
   </v-list>

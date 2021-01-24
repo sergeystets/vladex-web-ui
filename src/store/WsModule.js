@@ -32,7 +32,14 @@ const WsModule = {
             stompClient.subscribe("/topic/presence", tick => {
               console.log("[ws][tick][/topic/presence] " + tick);
               let presence = JSON.parse(tick.body);
-              context.dispatch('updatePresence', presence)
+              context.dispatch('updatePresence', presence);
+            });
+
+            console.log("subscribing to '/user/queue/chat'...")
+            stompClient.subscribe("/user/queue/chat", tick => {
+              console.log("received tick from /user/queue/chat " + tick);
+              let message = JSON.parse(tick.body);
+              context.dispatch('onNewMessageReceived', message)
             });
           },
           error => {
@@ -52,7 +59,7 @@ const WsModule = {
     },
     webSocketConnected(state) {
       return state.webSocketConnected;
-    },
+    }
   }
 }
 

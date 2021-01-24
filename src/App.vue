@@ -53,6 +53,7 @@
       <v-toolbar-title>
         <router-link to="/chat/0" tag="span" style="cursor: pointer">Vladex</router-link>
       </v-toolbar-title>
+      <div style="padding-left: 175px"> {{ chatName }} {{ chatStatus }}</div>
       <v-spacer></v-spacer>
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
@@ -83,6 +84,14 @@ export default {
         ]
       }
       return items
+    },
+    chatName() {
+      let activeChat = this.$store.getters.activeChat;
+      return activeChat === undefined ? "" : activeChat.name;
+    },
+    chatStatus() {
+      let activeChat = this.$store.getters.activeChat;
+      return activeChat === undefined || !activeChat.online ? "" : "(online)";
     },
     userIsAuthenticated() {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined;

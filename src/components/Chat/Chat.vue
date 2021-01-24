@@ -34,9 +34,8 @@ export default {
   ],
   mounted() {
     this.loadChat();
-    this.$store.dispatch('loadContacts');
     this.$store.dispatch('connect');
-
+    this.$store.dispatch('loadContacts');
   },
   components: {
     'chats': Chats,
@@ -46,42 +45,30 @@ export default {
     messages() {
       return this.chatMessages;
     },
-    webSocketConnected() {
-      return this.$store.getters.webSocketConnected;
+    chats() {
+      return this.$store.getters.chats;
+    },
+    activeChatNewMessage() {
+      return this.$store.getters.activeChatNewMessage;
     }
   },
   watch: {
-    '$route.params.id'(value) {
+    '$route.params.id'() {
+      this.$store.dispatch("chatOpened", Number.parseInt(this.id));
       this.loadChat()
-      if (this.webSocketConnected) {
-        if (value) {
-          this.subscribe();
-        }
-      }
-
     },
-    webSocketConnected: {
-      handler(value) {
-        if (value) {
-          this.subscribe();
-        }
-      },
-      deep: true
+    activeChatNewMessage(payload) {
+      if (payload.chatId === Number.parseInt(this.id)) {
+        this.chatMessages.push(payload);
+      }
+    },
+    chats: function (newValue, oldValue) {
+      if ((oldValue === undefined || oldValue.length === 0) && newValue) {
+        this.$store.dispatch("chatOpened", Number.parseInt(this.id));
+      }
     }
   },
   methods: {
-    subscribe() {
-      let id = Number.parseInt(this.id);
-      console.log("subscribing to '/user/queue/chat'...")
-      this.$store.getters.stompClient.subscribe("/user/queue/chat", tick => {
-        console.log("received tick from /user/queue/chat " + tick);
-        let message = JSON.parse(tick.body);
-        if (message.chatId === id) {
-          this.chatMessages.push(message);
-        }
-      });
-    },
-
     loadChat() {
       return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
         this.chatMessages = res.data;

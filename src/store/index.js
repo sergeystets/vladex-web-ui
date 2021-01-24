@@ -36,6 +36,20 @@ export const store = new Vuex.Store({
         }
       });
       context.commit('setContacts', contacts);
+
+      let chats = JSON.parse(JSON.stringify(context.getters.chats));
+      chats.forEach(function (chat) {
+        if (chat.contactId === presence.userId) {
+          chat.online = presence.online;
+        }
+      });
+      context.commit('setChats', chats);
+
+      let activeChat = context.getters.activeChat;
+      if (activeChat.contactId === presence.userId) {
+        activeChat.online = presence.online;
+        context.commit('setActiveChat', activeChat);
+      }
     }
   },
   getters: {
