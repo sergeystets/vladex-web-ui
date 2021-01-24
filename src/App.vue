@@ -51,7 +51,8 @@
     <v-app-bar app class="light-blue darken-1">
       <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <router-link to="/chat/0" tag="span" style="cursor: pointer">Vladex</router-link>
+        <router-link :to="/chat/ + lastChatId" tag="span" style="cursor: pointer">Vladex
+        </router-link>
       </v-toolbar-title>
       <div style="padding-left: 175px"> {{ chatName }} {{ chatStatus }}</div>
       <v-spacer></v-spacer>
@@ -95,6 +96,9 @@ export default {
     },
     userIsAuthenticated() {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
+    },
+    lastChatId() {
+      return this.$store.getters.user ? this.$store.getters.user.chatIdToLoad : 0
     },
     contacts() {
       return this.$store.getters.contacts;

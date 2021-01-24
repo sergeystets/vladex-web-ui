@@ -44,19 +44,21 @@ const ChatModule = {
         context.commit('setActiveChatNewMessage', message);
       }
 
-      // update unread messages count to be displayed on a left side bar
-      let chats = JSON.parse(JSON.stringify(context.getters.chats));
-      chats.forEach(function (chat) {
-        if (chat.id === message.chatId) {
-          let unreadMessages = chat.unreadMessages;
-          if (unreadMessages === undefined) {
-            unreadMessages = [];
+      if (message.user.id !== context.getters.user.id) {
+        // update unread messages count to be displayed on a left side bar
+        let chats = JSON.parse(JSON.stringify(context.getters.chats));
+        chats.forEach(function (chat) {
+          if (chat.id === message.chatId) {
+            let unreadMessages = chat.unreadMessages;
+            if (unreadMessages === undefined) {
+              unreadMessages = [];
+            }
+            unreadMessages.push(message)
+            chat.unreadMessages = unreadMessages;
           }
-          unreadMessages.push(message)
-          chat.unreadMessages = unreadMessages;
-        }
-      });
-      context.commit('setChats', chats);
+        });
+        context.commit('setChats', chats);
+      }
     },
   },
   getters: {
