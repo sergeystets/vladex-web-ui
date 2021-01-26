@@ -6,7 +6,11 @@ const AuthModule = {
   },
   mutations: {
     setUser(state, payload) {
-      localStorage.setItem("user", JSON.stringify(payload));
+      if (payload === undefined) {
+        localStorage.removeItem("user");
+      } else {
+        localStorage.setItem("user", JSON.stringify(payload));
+      }
       state.user = payload
     },
     initializeStore(state) {
@@ -22,6 +26,11 @@ const AuthModule = {
           + "&scope=API"
           + "&redirect_uri=" + window.location.origin + "/sign-in/success"
           + "&grant_type=implicit"
+    },
+
+    logout({commit}) {
+      commit('setUser', undefined);
+      window.location = process.env.VUE_APP_AUTH_URL + "/logout"
     },
 
     singInSuccess({commit}) {

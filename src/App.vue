@@ -47,6 +47,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <v-list>
+        <v-list-item-content class="text-center red--text">
+          <a href="" class="red--text" @click="logout"
+             style="text-decoration: none; cursor: pointer"> Log out</a>
+        </v-list-item-content>
+      </v-list>
     </v-navigation-drawer>
     <v-app-bar app class="light-blue darken-1">
       <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
@@ -70,10 +76,16 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       drawerToggle: false
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
     }
   },
   computed: {
