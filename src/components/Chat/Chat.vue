@@ -59,7 +59,7 @@ export default {
     },
     activeChatNewMessage(payload) {
       if (payload.chatId === Number.parseInt(this.id)) {
-        this.chatMessages.push(payload);
+        this.chatMessages.push(this.formatMessage(payload));
       }
     },
     chats: function (newValue, oldValue) {
@@ -70,8 +70,10 @@ export default {
   },
   methods: {
     loadChat() {
-      return api.loadChat(this.$store.getters.user.token, this.id).then(res => {
-        this.chatMessages = res.data;
+      return api.loadChat(this.$store.getters.user.token, this.id).then(result => {
+        result.data.forEach(message => {
+          this.chatMessages.push(this.formatMessage(message));
+        });
       })
     },
 
@@ -80,8 +82,15 @@ export default {
         var container = this.$el.querySelector('.chat-container');
         container.scrollTop = container.scrollHeight;
       })
-    }
-    ,
+    },
+
+    formatMessage(message) {
+      let date = message.timestamp ? new Date(message.timestamp * 1000) : new Date();
+      const options = {month: 'long', year: 'numeric', day: 'numeric'}
+      message.date = new Intl.DateTimeFormat('en-GB', options).format(date);
+      message.timestampMinutesAndSeconds = date.getHours() + ":" + date.getMinutes();
+      return message;
+    },
 
     sendMessage() {
       if (this.content !== '') {
@@ -98,6 +107,7 @@ export default {
 .scrollable {
   overflow-y: auto;
   height: 90vh;
+  border-right: 1px solid #e1e4e8;
 }
 
 .chat-container {
@@ -105,34 +115,81 @@ export default {
   height: calc(100vh - 9.5rem);
   overflow-y: auto;
   padding: 10px;
-  background-color: #f2f2f2;
+  background-color: #f8f9fa;
 }
 
-.chat-container .content {
-  padding: 8px;
-  background-color: lightgreen;
-  border-radius: 10px;
-  display: inline-block;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+.vac-message-card {
+  background: #fff;
+  color: #0a0a0a;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 6px 9px 3px;
+  white-space: pre-line;
+  max-width: 100%;
+  -webkit-transition-property: box-shadow, opacity;
+  transition-property: box-shadow, opacity;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: box-shadow;
+  box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.1),
+  0 1px 1px -1px rgba(0, 0, 0, 0.11), 0 1px 2px -1px rgba(0, 0, 0, 0.11);
+}
+
+
+.vac-message-box {
+  display: flex;
+  flex: 0 0 50%;
   max-width: 50%;
-  word-wrap: break-word;
+  justify-content: flex-start;
+  line-height: 1.4;
 }
 
-.chat-container .username {
-  font-size: 18px;
-  font-weight: bold;
+.vac-message-container {
+  position: relative;
+  padding: 2px 10px;
+  align-items: end;
+  min-width: 100px;
+  box-sizing: content-box;
 }
 
-.message {
-  margin-bottom: 3px;
+.vac-message-container-offset {
+  margin-top: 10px;
 }
 
-.message.own {
+.vac-offset-current {
+  margin-left: 50%;
+  justify-content: flex-end;
+}
+
+.vac-message-card.own {
+  background: #ccf2cf;
+}
+
+.vac-card-date {
+  max-width: 150px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #505a62;
+  background: #e5effa;
+}
+
+.vac-card-info {
+  border-radius: 4px;
+  text-align: center;
+  margin: 10px auto;
+  font-size: 12px;
+  padding: 4px;
+  display: block;
+  overflow-wrap: break-word;
+  position: relative;
+  white-space: normal;
+  box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.1),
+  0 1px 1px -1px rgba(0, 0, 0, 0.11), 0 1px 2px -1px rgba(0, 0, 0, 0.11);
+}
+
+.vac-text-timestamp {
+  font-size: 10px;
+  color: #828c94;
   text-align: right;
-}
-
-.message.own .content {
-  background-color: lightskyblue;
 }
 
 .typer {

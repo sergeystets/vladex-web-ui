@@ -1,10 +1,21 @@
 <template>
   <div>
-    <div class="message" v-for="(message, index) in messages" v-bind:key="index"
-         :class="{own: message.user.id === currentUserId}">
-      <div style="margin-top: 5px"></div>
-      <div class="content">
-        <div v-html="message.content"></div>
+    <div v-for="(message, index) in messages" v-bind:key="index">
+
+      <div class="vac-card-date vac-card-info"
+           v-if="index === 0 || (index > 0 && messages[index - 1].date !== message.date)">
+        {{ message.date }}
+      </div>
+      <div class="vac-message-box"
+           :class="{ 'vac-offset-current' :message.user.id === currentUserId}">
+        <div class="vac-message-container vac-message-container-offset">
+          <div class="vac-message-card" :class="{own: message.user.id === currentUserId}">
+            <div class="content">
+              <div v-html="message.content"></div>
+            </div>
+            <div class="vac-text-timestamp"> {{ message.timestampMinutesAndSeconds}}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
