@@ -30,7 +30,6 @@ const AuthModule = {
 
     logout({commit}) {
       commit('setUser', undefined);
-      window.location = process.env.VUE_APP_AUTH_URL + "/logout"
     },
 
     singInSuccess({commit}) {

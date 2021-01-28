@@ -13,7 +13,7 @@
             <div class="content">
               <div v-html="message.content"></div>
             </div>
-            <div class="vac-text-timestamp"> {{ message.timestampMinutesAndSeconds}}</div>
+            <div class="vac-text-timestamp"> {{ message.timestampMinutesAndSeconds }}</div>
           </div>
         </div>
       </div>
@@ -28,7 +28,8 @@ export default {
   ],
   computed: {
     currentUserId() {
-      return this.$store.getters.user.id;
+      let user = this.$store.getters.user;
+      return user === undefined ? undefined : user.id;
     }
   },
 }

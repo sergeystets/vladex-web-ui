@@ -49,7 +49,7 @@
       </v-list>
       <v-list>
         <v-list-item-content class="text-center red--text">
-          <a href="" class="red--text" @click="logout"
+          <a :href=logoutHref class="red--text" @click="logout"
              style="text-decoration: none; cursor: pointer"> Log out</a>
         </v-list-item-content>
       </v-list>
@@ -97,6 +97,9 @@ export default {
         ]
       }
       return items
+    },
+    logoutHref() {
+      return process.env.VUE_APP_AUTH_URL + "/logout";
     },
     chatName() {
       let activeChat = this.$store.getters.activeChat;
