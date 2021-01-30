@@ -5,9 +5,9 @@
              :class="{ 'vac-rooms-container-full': isMobile }">
         <chats v-show="showRoomsList"></chats>
       </v-col>
-      <v-col :sm="!showRoomsList ? 12 : 10"
+      <v-col v-show="(isMobile && !showRoomsList) || !isMobile" :sm="!showRoomsList ? 12 : 10"
              :style="{position: !showRoomsList ? 'absolute': 'relative'}">
-        <div v-show="(isMobile && !showRoomsList) || !isMobile" class="chat-container"
+        <div class="chat-container"
              ref="chatContainer">
           <message :messages="messages"></message>
         </div>
