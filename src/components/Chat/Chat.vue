@@ -127,6 +127,7 @@ export default {
       if (this.isMobile) {
         this.showRoomsList = false
       }
+      this.chatMessages = [];
       console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList)
       return api.loadChat(this.$store.getters.user.token, this.id).then(result => {
         result.data.forEach(message => {
