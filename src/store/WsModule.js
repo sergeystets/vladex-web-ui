@@ -20,6 +20,9 @@ const WsModule = {
   },
   actions: {
     connect(context) {
+      if (this.getters.webSocketConnected) {
+        return;
+      }
       let socket = new SockJS(process.env.VUE_APP_SERVER_URL + "/api/ws");
       let stompClient = Stomp.over(socket);
       stompClient.connect(

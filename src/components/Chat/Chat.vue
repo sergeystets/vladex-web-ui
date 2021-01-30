@@ -1,16 +1,46 @@
 <template>
   <v-container fluid style="padding: 0;">
     <v-row no-gutters>
-      <v-col sm="2" class="scrollable">
-        <chats></chats>
+      <v-col sm="2" class="scrollable"
+             :class="{ 'vac-rooms-container-full': isMobile }">
+        <chats v-show="showRoomsList"></chats>
       </v-col>
-      <v-col sm="10" style="position: relative;">
-        <div class="chat-container" ref="chatContainer">
+      <v-col :sm="!showRoomsList ? 12 : 10"
+             :style="{position: !showRoomsList ? 'absolute': 'relative'}">
+        <div v-show="(isMobile && !showRoomsList) || !isMobile" class="chat-container"
+             ref="chatContainer">
           <message :messages="messages"></message>
         </div>
-        <div class="typer">
-          <input type="text" placeholder="Type here..." v-on:keyup.enter="sendMessage"
-                 v-model="content">
+
+        <div class="vac-box-footer">
+          <!-- typer (text area) -->
+          <textarea
+              ref="roomTextarea"
+              placeholder="Type Message"
+              class="vac-textarea"
+              style="min-height: 20px; padding-left: 12px"
+              v-model="content"
+              v-on:keyup.enter="sendMessage"
+          ></textarea>
+
+          <div class="vac-icon-textarea">
+            <div
+                @click="sendMessage"
+                class="vac-svg-button"
+                :class="{ 'vac-send-disabled': inputDisabled, 'vac-icon-send':!inputDisabled }"
+            >
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  :class="{'vac-icon-send-disabled':inputDisabled}"
+                  version="1.1"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+              >
+                <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+              </svg>
+            </div>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -26,7 +56,9 @@ export default {
   data() {
     return {
       content: '',
-      chatMessages: []
+      chatMessages: [],
+      isMobile: false,
+      showRoomsList: true
     }
   },
   props: [
@@ -37,11 +69,23 @@ export default {
     this.$store.dispatch('connect');
     this.$store.dispatch('loadContacts');
   },
+
+  created() {
+    this.updateResponsive()
+    window.addEventListener('resize', ev => {
+      if (ev.isTrusted) {
+        this.updateResponsive()
+      }
+    })
+  },
   components: {
     'chats': Chats,
     'message': Message,
   },
   computed: {
+    inputDisabled() {
+      return this.isMessageEmpty()
+    },
     messages() {
       return this.chatMessages;
     },
@@ -69,7 +113,21 @@ export default {
     }
   },
   methods: {
+    updateResponsive() {
+      this.isMobile = window.innerWidth < 900;
+      if (this.isMobile) {
+        this.showRoomsList = true;
+      }
+      console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList);
+    },
+    isMessageEmpty() {
+      return !this.content.trim()
+    },
     loadChat() {
+      if (this.isMobile) {
+        this.showRoomsList = false
+      }
+      console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList)
       return api.loadChat(this.$store.getters.user.token, this.id).then(result => {
         result.data.forEach(message => {
           this.chatMessages.push(this.formatMessage(message));
@@ -106,13 +164,13 @@ export default {
 <style>
 .scrollable {
   overflow-y: auto;
-  height: 90vh;
+  height: 94vh;
   border-right: 1px solid #e1e4e8;
 }
 
 .chat-container {
   box-sizing: border-box;
-  height: calc(100vh - 9.5rem);
+  height: calc(104vh - 9.7rem);
   overflow-y: auto;
   padding: 10px;
   background-color: #f8f9fa;
@@ -133,7 +191,6 @@ export default {
   box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.1),
   0 1px 1px -1px rgba(0, 0, 0, 0.11), 0 1px 2px -1px rgba(0, 0, 0, 0.11);
 }
-
 
 .vac-message-box {
   display: flex;
@@ -186,32 +243,69 @@ export default {
   0 1px 1px -1px rgba(0, 0, 0, 0.11), 0 1px 2px -1px rgba(0, 0, 0, 0.11);
 }
 
+.vac-rooms-container-full {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
 .vac-text-timestamp {
   font-size: 10px;
   color: #828c94;
   text-align: right;
 }
 
-.typer {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  bottom: 0;
-  height: 4.9rem;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, .2);
+.vac-icon-send-disabled {
+  fill: #9ca6af;
 }
 
-.typer input[type=text] {
-  position: absolute;
-  left: 2.5rem;
-  padding: 1rem;
-  width: 80%;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  font-size: 1.25rem;
+.vac-icon-send {
+  fill: #1976d2;
+}
+
+.vac-icon-textarea {
+  display: flex;
+  margin: 12px 0 0 5px;
+}
+
+.vac-icon-textarea svg {
+  margin: 0 7px;
+}
+
+.vac-room-footer {
+  width: 100%;
+  border-bottom-right-radius: 4px;
+  z-index: 10;
+}
+
+.vac-box-footer {
+  display: flex;
+  position: relative;
+  background: #f8f9fa;
+  padding: 10px 8px 10px;
+}
+
+.vac-textarea {
+  height: 20px;
+  width: 100%;
+  line-height: 20px;
+  overflow: hidden;
+  outline: 0;
+  resize: none;
+  border-radius: 20px;
+  padding: 12px 16px;
+  box-sizing: content-box;
+  font-size: 16px;
+  background: #fff;
+  color: #0a0a0a;
+  caret-color: #1976d2;
+  border: 1px solid #e1e4e8
+}
+
+.vac-textarea::placeholder {
+  color: #9ca6af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 </style>
