@@ -7,7 +7,7 @@
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            Contacts ({{ contacts.length }})
+            {{$t('label.contacts')}} ({{ contacts.length }})
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -34,7 +34,7 @@
       <v-list>
         <v-list-item-content class="text-center red--text">
           <a :href=logoutHref class="red--text" @click="logout"
-             style="text-decoration: none; cursor: pointer"> Log out</a>
+             style="text-decoration: none; cursor: pointer"> {{$t('label.button.logout')}}</a>
         </v-list-item-content>
       </v-list>
     </v-navigation-drawer>
@@ -55,7 +55,7 @@
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
-          <div class="hidden-xs-only">{{ item.title }}</div>
+          <div class="hidden-xs-only">{{$t('label.button.search')}}</div>
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
@@ -92,7 +92,7 @@ export default {
       let items = [];
       if (this.userIsAuthenticated) {
         items = [
-          {icon: 'mdi-magnify', title: 'Search', route: '#'},
+          {icon: 'mdi-magnify', title: 'label.button.search', route: '#'},
         ]
       }
       return items

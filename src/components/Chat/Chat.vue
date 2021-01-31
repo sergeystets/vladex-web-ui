@@ -16,7 +16,7 @@
           <!-- typer (text area) -->
           <textarea
               ref="roomTextarea"
-              placeholder="Type Message"
+              :placeholder="$t('placeholder.typer.type.message')"
               class="vac-textarea"
               style="min-height: 20px; padding-left: 12px"
               v-model="content"
@@ -147,7 +147,7 @@ export default {
     formatMessage(message) {
       let date = message.timestamp ? new Date(message.timestamp * 1000) : new Date();
       const options = {month: 'long', year: 'numeric', day: 'numeric'}
-      message.date = new Intl.DateTimeFormat('en-GB', options).format(date);
+      message.date = new Intl.DateTimeFormat(navigator.language.split('-')[0], options).format(date);
       message.timestampMinutesAndSeconds = date.getHours() + ":" + date.getMinutes();
       return message;
     },
