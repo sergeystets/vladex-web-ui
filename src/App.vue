@@ -56,11 +56,18 @@
     </v-navigation-drawer>
     <v-app-bar app class="light-blue darken-1">
       <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
-      <v-toolbar-title>
+      <v-toolbar-title v-show="!isMobile">
         <router-link :to="/chat/ + lastChatId" tag="span" style="cursor: pointer">Vladex
         </router-link>
       </v-toolbar-title>
-      <div style="padding-left: 175px"> {{ chatName }} {{ chatStatus }}</div>
+      <div v-show="isMobile && !showRoomsList">
+        <v-btn color="#039ce5" v-on:click="goBackToRoomsList">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
+      </div>
+      <div v-show="(isMobile && !showRoomsList) || !isMobile"
+           :style="{'padding-left': !isMobile? '110px': '20px'}"> {{ chatName }} {{ chatStatus }}
+      </div>
       <v-spacer></v-spacer>
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
@@ -80,15 +87,24 @@
 export default {
   data() {
     return {
-      drawerToggle: false
+      drawerToggle: false,
     }
   },
   methods: {
+    goBackToRoomsList() {
+      this.$store.dispatch('goBackToRoomsList');
+    },
     logout() {
       this.$store.dispatch('logout');
     }
   },
   computed: {
+    isMobile() {
+      return this.$store.getters.isMobile;
+    },
+    showRoomsList() {
+      return this.$store.getters.showRoomsList;
+    },
     menuItems() {
       let items = [];
       if (this.userIsAuthenticated) {

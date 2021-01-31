@@ -57,8 +57,6 @@ export default {
     return {
       content: '',
       chatMessages: [],
-      isMobile: false,
-      showRoomsList: true
     }
   },
   props: [
@@ -85,6 +83,12 @@ export default {
   computed: {
     inputDisabled() {
       return this.isMessageEmpty()
+    },
+    isMobile() {
+      return this.$store.getters.isMobile;
+    },
+    showRoomsList() {
+      return this.$store.getters.showRoomsList;
     },
     messages() {
       return this.chatMessages;
@@ -114,18 +118,15 @@ export default {
   },
   methods: {
     updateResponsive() {
-      this.isMobile = window.innerWidth < 900;
-      if (this.isMobile) {
-        this.showRoomsList = true;
-      }
-      console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList);
+      let mobile = window.innerWidth < 900;
+      this.$store.dispatch('updateResponsive', mobile);
     },
     isMessageEmpty() {
       return !this.content.trim()
     },
     loadChat() {
       if (this.isMobile) {
-        this.showRoomsList = false
+        this.$store.dispatch("updateShowRoomsList", false)
       }
       this.chatMessages = [];
       console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList)

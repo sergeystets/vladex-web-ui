@@ -5,11 +5,19 @@ const ChatModule = {
     chats: [],
     activeChatId: undefined,
     activeChat: undefined,
-    activeChatNewMessage: {}
+    activeChatNewMessage: {},
+    isMobile: false,
+    showRoomsList: true
   },
   mutations: {
     setActiveChatId(state, payload) {
       state.activeChatId = payload
+    },
+    setIsMobile(state, payload) {
+      state.isMobile = payload
+    },
+    setShowRoomsList(state, payload) {
+      state.showRoomsList = payload
     },
     setActiveChat(state, payload) {
       state.activeChat = payload
@@ -22,6 +30,19 @@ const ChatModule = {
     }
   },
   actions: {
+    updateShowRoomsList(context, showRoomsList){
+      context.commit("setShowRoomsList", showRoomsList);
+    },
+    goBackToRoomsList(context) {
+      context.commit("setShowRoomsList", true);
+    },
+    updateResponsive(context, mobile) {
+      let switchedToMobile = !context.getters.isMobile && mobile;
+      if (switchedToMobile || !mobile) {
+        context.commit("setShowRoomsList", true);
+      }
+      context.commit("setIsMobile", mobile);
+    },
     chatOpened(context, payload) {
       console.log("chat " + payload + " was opened and is now active");
       context.commit("setActiveChatId", payload)
@@ -62,6 +83,12 @@ const ChatModule = {
     },
   },
   getters: {
+    isMobile(state) {
+      return state.isMobile;
+    },
+    showRoomsList(state) {
+      return state.showRoomsList;
+    },
     chats(state) {
       return state.chats
     },
