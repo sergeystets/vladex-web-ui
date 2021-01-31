@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-if="!(isMobile && !showRoomsList)" absolute temporary v-model="drawerToggle">
+    <v-navigation-drawer v-if="!(isMobile && !showRoomsList)" absolute temporary
+                         v-model="drawerToggle">
       <v-list>
         <v-list-item>
           <v-list-item-action>
@@ -13,29 +14,13 @@
       </v-list>
       <v-list>
         <v-list-item v-for="user in contacts" v-bind:key="user.username">
-
-          <!--online-->
-          <v-badge v-show="user.online"
-                   bordered
-                   bottom
-                   color="green accent-4"
-                   dot
-                   offset-x="10"
-                   offset-y="10"
-          >
-            <v-list-item-avatar>
-              <img :src="user.avatar" alt="avatar"/>
-            </v-list-item-avatar>
-          </v-badge>
-
-          <!--offline-->
-          <v-badge v-show="!user.online"
-                   bordered
-                   bottom
-                   color="grey lighten-2"
-                   dot
-                   offset-x="10"
-                   offset-y="10"
+          <v-badge
+              bordered
+              bottom
+              :color="user.online?'green accent-4' : 'grey lighten-2'"
+              dot
+              offset-x="10"
+              offset-y="10"
           >
             <v-list-item-avatar>
               <img :src="user.avatar" alt="avatar"/>
