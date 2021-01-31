@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer absolute temporary v-model="drawerToggle">
+    <v-navigation-drawer v-if="!(isMobile && !showRoomsList)" absolute temporary v-model="drawerToggle">
       <v-list>
         <v-list-item>
           <v-list-item-action>
@@ -55,16 +55,19 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app class="light-blue darken-1">
-      <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
-      <v-toolbar-title v-show="!isMobile">
+      <v-app-bar-nav-icon v-if="isMobile && !showRoomsList"
+                          @click.native.stop="goBackToRoomsList">
+        <v-icon>
+          mdi-arrow-left
+        </v-icon>
+      </v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-else
+                          @click.native.stop="drawerToggle = !drawerToggle">
+      </v-app-bar-nav-icon>
+      <v-toolbar-title v-show="!isMobile || showRoomsList">
         <router-link :to="/chat/ + lastChatId" tag="span" style="cursor: pointer">Vladex
         </router-link>
       </v-toolbar-title>
-      <div v-show="isMobile && !showRoomsList">
-        <v-btn color="#039ce5" v-on:click="goBackToRoomsList">
-          <v-icon>arrow_back</v-icon>
-        </v-btn>
-      </div>
       <div v-show="(isMobile && !showRoomsList) || !isMobile"
            :style="{'padding-left': !isMobile? '110px': '20px'}"> {{ chatName }} {{ chatStatus }}
       </div>
@@ -109,7 +112,7 @@ export default {
       let items = [];
       if (this.userIsAuthenticated) {
         items = [
-          {icon: 'mdi-magnify', title: 'Search', route: '/search'},
+          {icon: 'mdi-magnify', title: 'Search', route: '#'},
         ]
       }
       return items

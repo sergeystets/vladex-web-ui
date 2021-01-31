@@ -1,6 +1,5 @@
 <template>
-  <v-list subheader>
-    <v-subheader>Your Chats</v-subheader>
+  <v-list>
     <v-list-item v-for="chat in chats" v-bind:key="chat.name" :to="/chat/ + chat.id">
       <v-list-item-content>
         <v-list-item-title v-html="chat.name"></v-list-item-title>
