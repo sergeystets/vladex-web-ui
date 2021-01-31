@@ -1,6 +1,6 @@
 <template>
   <v-list>
-    <v-list-item v-for="chat in chats" v-bind:key="chat.name" :to="/chat/ + chat.id">
+    <v-list-item v-for="chat in chats" v-bind:key="chat.name" v-on:click="onChatClicked(chat)">
       <v-list-item-content>
         <v-list-item-title v-html="chat.name"></v-list-item-title>
       </v-list-item-content>
@@ -23,6 +23,14 @@ export default {
   computed: {
     chats() {
       return this.$store.getters.chats
+    }
+  },
+  methods: {
+    onChatClicked(chat) {
+      if (this.$store.getters.activeChatId === chat.id && this.$store.getters.isMobile) {
+        this.$store.dispatch("updateShowRoomsList", false);
+      }
+      this.$router.push("/chat/" + chat.id);
     }
   }
 }
