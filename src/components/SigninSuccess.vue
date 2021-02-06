@@ -9,7 +9,7 @@
           class="subtitle-1 text-center"
           cols="12"
       >
-        Sing-in success, redirecting to home page...
+        Sign-in success, redirecting to home page...
       </v-col>
       <v-col cols="6">
         <v-progress-linear
@@ -26,7 +26,7 @@
 
 export default {
   mounted() {
-    this.$store.dispatch('singInSuccess')
+    this.$store.dispatch('signInSuccess')
   },
   computed: {
     user() {

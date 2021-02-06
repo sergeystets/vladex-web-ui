@@ -19,7 +19,7 @@ const AuthModule = {
   }
   ,
   actions: {
-    singIn() {
+    signIn() {
       window.location = process.env.VUE_APP_AUTH_URL + "/oauth/authorize"
           + "?response_type=token"
           + "&client_id=vladex-web-ui"
@@ -32,7 +32,7 @@ const AuthModule = {
       commit('setUser', undefined);
     },
 
-    singInSuccess({commit}) {
+    signInSuccess({commit}) {
       let queryStringToJson = function (query) {
         if (query === "") {
           return {};

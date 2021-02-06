@@ -27,7 +27,7 @@
 
 export default {
   mounted() {
-    this.$store.dispatch('singIn')
+    this.$store.dispatch('signIn')
   },
 }
 </script>

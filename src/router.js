@@ -22,7 +22,7 @@ const router = new Router({
       beforeEnter: AuthGuard
     },
     {
-      path: "/sing-in",
+      path: "/sign-in",
       name: 'SignIn',
       component: SignIn,
     },
