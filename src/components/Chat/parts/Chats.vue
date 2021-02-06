@@ -1,8 +1,10 @@
 <template>
   <v-list>
-    <v-list-item v-for="chat in chats" v-bind:key="chat.name" v-on:click="onChatClicked(chat)">
+    <v-list-item :class="{'vac-chat-message-mobile': isMobile}"
+                 v-for="chat in chats" v-bind:key="chat.name"
+                 v-on:click="onChatClicked(chat)">
       <v-list-item-content>
-        <v-list-item-title v-html="chat.name"></v-list-item-title>
+        <v-list-item-title v-text="chat.name"></v-list-item-title>
       </v-list-item-content>
       <v-list-item-action>
         <!--online-->
@@ -23,6 +25,9 @@ export default {
   computed: {
     chats() {
       return this.$store.getters.chats
+    },
+    isMobile() {
+      return this.$store.getters.isMobile;
     }
   },
   methods: {
@@ -35,3 +40,11 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.vac-chat-message-mobile {
+  border-bottom: 1px solid #eee;
+}
+
+</style>

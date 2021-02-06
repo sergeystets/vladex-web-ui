@@ -7,7 +7,7 @@
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            {{$t('label.contacts')}} ({{ contacts.length }})
+            {{ $t('label.contacts') }} ({{ contacts.length }})
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -34,7 +34,7 @@
       <v-list>
         <v-list-item-content class="text-center red--text">
           <a :href=logoutHref class="red--text" @click="logout"
-             style="text-decoration: none; cursor: pointer"> {{$t('label.button.logout')}}</a>
+             style="text-decoration: none; cursor: pointer"> {{ $t('label.button.logout') }}</a>
         </v-list-item-content>
       </v-list>
     </v-navigation-drawer>
@@ -45,7 +45,7 @@
       <v-app-bar-nav-icon v-else @click.native.stop="drawerToggle = !drawerToggle">
       </v-app-bar-nav-icon>
       <v-toolbar-title v-show="!isMobile || showRoomsList">
-        <router-link :to="/chat/ + lastChatId" tag="span" style="cursor: pointer">Vladex
+        <router-link to="/" tag="span" style="cursor: pointer">Vladex
         </router-link>
       </v-toolbar-title>
       <div v-show="(isMobile && !showRoomsList) || !isMobile"
@@ -55,7 +55,7 @@
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
-          <div class="hidden-xs-only">{{$t('label.button.search')}}</div>
+          <div class="hidden-xs-only">{{ $t('label.button.search') }}</div>
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
@@ -110,9 +110,6 @@ export default {
     },
     userIsAuthenticated() {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
-    },
-    lastChatId() {
-      return this.$store.getters.user ? this.$store.getters.user.chatIdToLoad : 0
     },
     contacts() {
       return this.$store.getters.contacts;

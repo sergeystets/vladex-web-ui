@@ -3,7 +3,93 @@
     <v-row no-gutters>
       <v-col sm="2" class="scrollable"
              :class="{ 'vac-rooms-container-full': isMobile }">
+
         <chats v-show="showRoomsList"></chats>
+
+        <!-- Create new chat button (mobile only)-->
+        <v-fab-transition>
+          <v-btn @click="createChatDialog = !createChatDialog"
+                 v-show="isMobile & showRoomsList && scrollUp"
+                 style="bottom: 32px"
+                 color="blue"
+                 dark
+                 absolute
+                 bottom
+                 right
+                 fab
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-fab-transition>
+
+        <!-- Create new chat dialog -->
+        <v-dialog
+            v-model="createChatDialog"
+            max-width="500px"
+        >
+
+          <v-toolbar color="primary" fixed>
+            <v-btn icon dark @click="createChatDialog = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title>{{ $t('label.create.new.chat') }}</v-toolbar-title>
+          </v-toolbar>
+
+          <v-card>
+            <v-card-text>
+              <!-- Contacts list -->
+              <v-list>
+                <v-list-item>
+                  <v-list-item-action>
+                    <v-icon>mdi-account</v-icon>
+                  </v-list-item-action>
+                  <v-list-item-content>
+                    {{ $t('label.new.chat.dialog.selected') }} ({{ newChatMembers.length }})
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+
+              <v-list>
+                <v-list-item
+                    :style="{
+                  'background-color': newChatMembers.some((el) => el === user.id) ? '#cce0ef': 'white',
+                  cursor: 'pointer'
+                }"
+                    v-for="user in contacts" v-bind:key="user.id">
+                  <v-badge
+                      bordered
+                      bottom
+                      :color="user.online?'green accent-4' : 'grey lighten-2'"
+                      dot
+                      offset-x="10"
+                      offset-y="10"
+                  >
+                    <v-list-item-avatar>
+                      <img :src="user.avatar" alt="avatar"/>
+                    </v-list-item-avatar>
+
+                  </v-badge>
+                  <v-list-item-content @click="addOrRemoveNewChatMember(user.id)">
+                    <v-list-item-title>{{ user.username }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+
+
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  text
+                  color="primary"
+                  @click="createChatDialog = false; newChatMembers = [];"
+              >
+                {{ $t('label.cancel.new.chat.dialog') }}
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
       </v-col>
       <v-col v-show="(isMobile && !showRoomsList) || !isMobile" :sm="!showRoomsList ? 12 : 10"
              :style="{position: !showRoomsList ? 'absolute': 'relative'}">
@@ -57,13 +143,18 @@ export default {
     return {
       content: '',
       chatMessages: [],
+      scrollUp: true,
+      createChatDialog: false,
+      newChatMembers: []
     }
   },
   props: [
     'id'
   ],
   mounted() {
-    this.loadChat();
+    if (this.id) {
+      this.loadChat();
+    }
     this.$store.dispatch('connect');
     this.$store.dispatch('loadContacts');
   },
@@ -81,6 +172,9 @@ export default {
     'message': Message,
   },
   computed: {
+    contacts() {
+      return this.$store.getters.contacts;
+    },
     inputDisabled() {
       return this.isMessageEmpty()
     },
@@ -117,6 +211,20 @@ export default {
     }
   },
   methods: {
+    onNewChatDialogOpened() {
+      this.newChatMembers = [];
+    },
+    addOrRemoveNewChatMember(id) {
+      if (this.newChatMembers.some((el) => el === id)) {
+        for (let i = 0; i < this.newChatMembers.length; i++) {
+          if (this.newChatMembers[i] === id) {
+            this.newChatMembers.splice(i, 1);
+          }
+        }
+      } else {
+        this.newChatMembers.push(id)
+      }
+    },
     updateResponsive() {
       let mobile = window.innerWidth < 900;
       this.$store.dispatch('updateResponsive', mobile);
@@ -129,7 +237,6 @@ export default {
         this.$store.dispatch("updateShowRoomsList", false)
       }
       this.chatMessages = [];
-      console.log("mobile: " + this.isMobile + ", showRoomsList: " + this.showRoomsList)
       return api.loadChat(this.$store.getters.user.token, this.id).then(result => {
         result.data.forEach(message => {
           this.chatMessages.push(this.formatMessage(message));

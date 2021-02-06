@@ -2,5 +2,9 @@
   "placeholder.typer.type.message": "Введите сообщение",
   "label.button.logout": "Выход",
   "label.button.search": "Поиск",
-  "label.contacts": "Контакты"
+  "label.contacts": "Контакты",
+  "label.create.new.chat": "Создание нового чата",
+  "label.cancel.new.chat.dialog": "Отменить",
+  "label.new.chat.dialog.selected": "Выбрано",
+  "text.no.chats.selected": "Пожалуйста, выберете чат, чтобы начать общение"
 }

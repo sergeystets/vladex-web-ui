@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-card flat class="no_chats_selected"
+            v-show="messages === undefined || messages.length === 0">
+      <v-card-title style="color: #999" justify-center>{{$t('text.no.chats.selected')}}</v-card-title>
+    </v-card>
+
     <div v-for="(message, index) in messages" v-bind:key="index">
 
       <div class="vac-card-date vac-card-info"
@@ -34,3 +39,15 @@ export default {
   },
 }
 </script>
+
+<style>
+
+.no_chats_selected {
+  display: flex;
+  align-items: center;
+  background: none !important;
+  justify-content: center;
+  height: 60vh;
+}
+
+</style>

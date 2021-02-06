@@ -2,5 +2,9 @@
   "placeholder.typer.type.message": "Type Message",
   "label.button.logout": "Log Out",
   "label.button.search": "Search",
-  "label.contacts": "Contacts"
+  "label.contacts": "Contacts",
+  "label.create.new.chat": "Create new chat",
+  "label.cancel.new.chat.dialog": "Cancel",
+  "label.new.chat.dialog.selected": "Selected",
+  "text.no.chats.selected": "Please select a chat to start messaging"
 }

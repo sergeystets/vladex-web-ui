@@ -12,7 +12,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/chat/0'
+      component: Chat,
+      beforeEnter: AuthGuard
     },
     {
       path: '/chat/:id',
