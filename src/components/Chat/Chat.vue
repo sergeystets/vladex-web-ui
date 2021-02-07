@@ -28,14 +28,14 @@
             max-width="500px"
         >
 
-          <v-toolbar color="primary" fixed>
-            <v-btn icon dark @click="createChatDialog = false">
-              <v-icon>close</v-icon>
-            </v-btn>
-            <v-toolbar-title>{{ $t('label.create.new.chat') }}</v-toolbar-title>
-          </v-toolbar>
-
           <v-card>
+            <v-toolbar color="#1976d2" fixed>
+              <v-btn icon dark @click="createChatDialog = false">
+                <v-icon>close</v-icon>
+              </v-btn>
+              <v-toolbar-title class="white--text"> {{ $t('label.create.new.chat') }}</v-toolbar-title>
+            </v-toolbar>
+
             <v-card-text>
               <!-- Contacts list -->
               <v-list>
