@@ -32,10 +32,14 @@ export default {
   },
   methods: {
     onChatClicked(chat) {
+      if (this.$store.getters.activeChatId === chat.id && !this.$store.getters.isMobile) {
+        return;
+      }
       if (this.$store.getters.activeChatId === chat.id && this.$store.getters.isMobile) {
         this.$store.dispatch("updateShowRoomsList", false);
+      } else {
+        this.$router.push("/chat/" + chat.id);
       }
-      this.$router.push("/chat/" + chat.id);
     }
   }
 }

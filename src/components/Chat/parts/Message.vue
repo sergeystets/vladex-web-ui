@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-card flat class="no_chats_selected"
-            v-show="messages === undefined || messages.length === 0">
-      <v-card-title style="color: #999" justify-center>{{$t('text.no.chats.selected')}}</v-card-title>
+            v-show="activeChat === undefined">
+      <v-card-title style="color: #999" justify-center>{{ $t('text.no.chats.selected') }}</v-card-title>
     </v-card>
 
     <div v-for="(message, index) in messages" v-bind:key="index">
@@ -32,6 +32,9 @@ export default {
     'messages'
   ],
   computed: {
+    activeChat() {
+      return this.$store.getters.activeChat;
+    },
     currentUserId() {
       let user = this.$store.getters.user;
       return user === undefined ? undefined : user.id;

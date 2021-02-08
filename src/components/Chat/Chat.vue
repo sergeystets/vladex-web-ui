@@ -1,136 +1,144 @@
 <template>
-  <v-container fluid style="padding: 0;">
-    <v-row no-gutters>
-      <v-col sm="2" class="scrollable"
+  <div class="window-container">
+    <div class="vac-card-window" style="height: calc(100vh - 57px)">
+      <div class="vac-chat-container">
+        <div class="vac-rooms-container"
+             v-show="showRoomsList"
              :class="{ 'vac-rooms-container-full': isMobile }">
 
-        <chats v-show="showRoomsList"></chats>
+          <!-- Room List -->
+          <div class="vac-room-list">
+            <chats></chats>
+          </div>
 
-        <!-- Create new chat button (mobile only)-->
-        <v-fab-transition>
-          <v-btn @click="createChatDialog = !createChatDialog"
-                 v-show="isMobile & showRoomsList && scrollUp"
-                 style="bottom: 32px"
-                 color="blue"
-                 dark
-                 absolute
-                 bottom
-                 right
-                 fab
+          <!-- Create new chat button (mobile only)-->
+          <v-fab-transition>
+            <v-btn @click="createChatDialog = !createChatDialog"
+                   v-show="isMobile & showRoomsList && scrollUp"
+                   style="bottom: 32px"
+                   color="blue"
+                   dark
+                   absolute
+                   bottom
+                   right
+                   fab
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-fab-transition>
+
+          <!-- Create new chat dialog -->
+          <v-dialog
+              v-model="createChatDialog"
+              max-width="500px"
           >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-fab-transition>
 
-        <!-- Create new chat dialog -->
-        <v-dialog
-            v-model="createChatDialog"
-            max-width="500px"
-        >
+            <v-card>
+              <v-toolbar color="#1976d2" fixed>
+                <v-btn icon dark @click="createChatDialog = false">
+                  <v-icon>close</v-icon>
+                </v-btn>
+                <v-toolbar-title class="white--text"> {{ $t('label.create.new.chat') }}</v-toolbar-title>
+              </v-toolbar>
 
-          <v-card>
-            <v-toolbar color="#1976d2" fixed>
-              <v-btn icon dark @click="createChatDialog = false">
-                <v-icon>close</v-icon>
-              </v-btn>
-              <v-toolbar-title class="white--text"> {{ $t('label.create.new.chat') }}</v-toolbar-title>
-            </v-toolbar>
+              <v-card-text>
+                <!-- Contacts list -->
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-action>
+                      <v-icon>mdi-account</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      {{ $t('label.new.chat.dialog.selected') }} ({{ newChatMembers.length }})
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
 
-            <v-card-text>
-              <!-- Contacts list -->
-              <v-list>
-                <v-list-item>
-                  <v-list-item-action>
-                    <v-icon>mdi-account</v-icon>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    {{ $t('label.new.chat.dialog.selected') }} ({{ newChatMembers.length }})
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-
-              <v-list>
-                <v-list-item
-                    :style="{
+                <v-list>
+                  <v-list-item
+                      :style="{
                   'background-color': newChatMembers.some((el) => el === user.id) ? '#cce0ef': 'white',
                   cursor: 'pointer'
                 }"
-                    v-for="user in contacts" v-bind:key="user.id">
-                  <v-badge
-                      bordered
-                      bottom
-                      :color="user.online?'green accent-4' : 'grey lighten-2'"
-                      dot
-                      offset-x="10"
-                      offset-y="10"
-                  >
-                    <v-list-item-avatar>
-                      <img :src="user.avatar" alt="avatar"/>
-                    </v-list-item-avatar>
+                      v-for="user in contacts" v-bind:key="user.id">
+                    <v-badge
+                        bordered
+                        bottom
+                        :color="user.online?'green accent-4' : 'grey lighten-2'"
+                        dot
+                        offset-x="10"
+                        offset-y="10"
+                    >
+                      <v-list-item-avatar>
+                        <img :src="user.avatar" alt="avatar"/>
+                      </v-list-item-avatar>
 
-                  </v-badge>
-                  <v-list-item-content @click="addOrRemoveNewChatMember(user.id)">
-                    <v-list-item-title>{{ user.username }}</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
+                    </v-badge>
+                    <v-list-item-content @click="addOrRemoveNewChatMember(user.id)">
+                      <v-list-item-title>{{ user.username }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
 
 
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                  text
-                  color="primary"
-                  @click="createChatDialog = false; newChatMembers = [];"
-              >
-                {{ $t('label.cancel.new.chat.dialog') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="createChatDialog = false; newChatMembers = [];"
+                >
+                  {{ $t('label.cancel.new.chat.dialog') }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
-      </v-col>
-      <v-col v-show="(isMobile && !showRoomsList) || !isMobile" :sm="!showRoomsList ? 12 : 10"
-             :style="{position: !showRoomsList ? 'absolute': 'relative'}">
-        <div class="chat-container"
-             ref="chatContainer">
-          <message :messages="messages"></message>
         </div>
 
-        <div class="vac-box-footer">
-          <!-- typer (text area) -->
-          <textarea
-              ref="roomTextarea"
-              :placeholder="$t('placeholder.typer.type.message')"
-              class="vac-textarea"
-              style="min-height: 20px; padding-left: 12px"
-              v-model="content"
-              v-on:keyup.enter="sendMessage"
-          ></textarea>
+        <!-- Chat Room -->
+        <div class="vac-col-messages" v-show="(isMobile && !showRoomsList) || !isMobile" :sm="!showRoomsList ? 12 : 10">
+          <div class="vac-container-scroll" ref="chatContainer">
+            <message :messages="messages"></message>
+          </div>
 
-          <div class="vac-icon-textarea">
-            <div
-                @click="sendMessage"
-                class="vac-svg-button"
-                :class="{ 'vac-send-disabled': inputDisabled, 'vac-icon-send':!inputDisabled }"
-            >
-              <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  :class="{'vac-icon-send-disabled':inputDisabled}"
-                  version="1.1"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-              >
-                <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
-              </svg>
+          <div class="vac-room-footer">
+            <div class="vac-box-footer">
+              <!-- typer (text area) -->
+              <textarea
+                  ref="roomTextarea"
+                  :placeholder="$t('placeholder.typer.type.message')"
+                  class="vac-textarea"
+                  style="min-height: 20px; padding-left: 12px"
+                  v-model="content"
+                  v-on:keyup.enter="sendMessage"
+              ></textarea>
+
+              <div class="vac-icon-textarea">
+                <div
+                    @click="sendMessage"
+                    class="vac-svg-button"
+                    :class="{ 'vac-send-disabled': inputDisabled, 'vac-icon-send':!inputDisabled }"
+                >
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      :class="{'vac-icon-send-disabled':inputDisabled}"
+                      version="1.1"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                  >
+                    <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </v-col>
-    </v-row>
-  </v-container>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -172,6 +180,9 @@ export default {
     'message': Message,
   },
   computed: {
+    screenHeight() {
+      return 'calc(100vh - 57px)';
+    },
     contacts() {
       return this.$store.getters.contacts;
     },
@@ -246,7 +257,7 @@ export default {
 
     scrollToEnd() {
       this.$nextTick(() => {
-        var container = this.$el.querySelector('.chat-container');
+        let container = this.$el.querySelector('.vac-container-scroll');
         container.scrollTop = container.scrollHeight;
       })
     },
@@ -271,18 +282,71 @@ export default {
 </script>
 
 <style>
-.scrollable {
+
+.window-container {
+  width: 100%;
+}
+
+/* chat container for chats + active chat */
+
+.vac-card-window {
+  width: 100%;
+  display: block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  position: relative;
+  white-space: normal;
+}
+
+.vac-chat-container {
+  height: 100%;
+  display: flex;
+  background-color: #f8f9fa;
+}
+
+/* room list */
+
+.vac-rooms-container {
+  display: flex;
+  flex-flow: column;
+  flex: 0 0 25%;
+  min-width: 260px;
+  max-width: 500px;
+  position: relative;
+  background: #fff;
+  height: 100%;
+}
+
+.vac-rooms-container-full {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.vac-room-list {
+  flex: 1;
+  position: relative;
+  max-width: 100%;
+  cursor: pointer;
   overflow-y: auto;
-  height: 94vh;
   border-right: 1px solid #e1e4e8;
 }
 
-.chat-container {
-  box-sizing: border-box;
-  height: calc(104vh - 9.7rem);
+/* Chat room */
+
+.vac-col-messages {
+  position: relative;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-flow: column;
+}
+
+.vac-container-scroll {
+  flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  background-color: #f8f9fa;
+  margin-right: 1px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .vac-message-card {
@@ -350,11 +414,6 @@ export default {
   white-space: normal;
   box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.1),
   0 1px 1px -1px rgba(0, 0, 0, 0.11), 0 1px 2px -1px rgba(0, 0, 0, 0.11);
-}
-
-.vac-rooms-container-full {
-  flex: 0 0 100%;
-  max-width: 100%;
 }
 
 .vac-text-timestamp {
