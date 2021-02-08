@@ -112,7 +112,8 @@
                   class="vac-textarea"
                   style="min-height: 20px; padding-left: 12px"
                   v-model="content"
-                  v-on:keyup.enter="sendMessage"
+                  v-on:keyup="onKeyUp($event)"
+                  v-on:keydown="onKeyDown($event)"
               ></textarea>
 
               <div class="vac-icon-textarea">
@@ -180,9 +181,6 @@ export default {
     'message': Message,
   },
   computed: {
-    screenHeight() {
-      return 'calc(100vh - 57px)';
-    },
     contacts() {
       return this.$store.getters.contacts;
     },
@@ -222,8 +220,18 @@ export default {
     }
   },
   methods: {
-    onNewChatDialogOpened() {
-      this.newChatMembers = [];
+    onKeyDown(e) {
+      if (13 === e.keyCode) {
+        e.preventDefault();
+      }
+    },
+    onKeyUp(e) {
+      if (13 === e.keyCode && !e.ctrlKey) {
+        this.sendMessage();
+      }
+      if (13 === e.keyCode && e.ctrlKey) {
+        this.content = this.content + "\n";
+      }
     },
     addOrRemoveNewChatMember(id) {
       if (this.newChatMembers.some((el) => el === id)) {
@@ -271,6 +279,7 @@ export default {
     },
 
     sendMessage() {
+      this.content = this.content.trim();
       if (this.content !== '') {
         this.$store.dispatch('sendMessage', {content: this.content, chatId: this.id});
         this.content = '';
