@@ -309,7 +309,7 @@ export default {
 .vac-rooms-container {
   display: flex;
   flex-flow: column;
-  flex: 0 0 25%;
+  flex: 0 0 22%;
   min-width: 260px;
   max-width: 500px;
   position: relative;
@@ -442,6 +442,7 @@ export default {
 .vac-room-footer {
   width: 100%;
   border-bottom-right-radius: 4px;
+  padding-bottom: 10px;
   z-index: 10;
 }
 
