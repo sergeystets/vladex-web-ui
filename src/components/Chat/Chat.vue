@@ -226,10 +226,10 @@ export default {
       }
     },
     onKeyUp(e) {
-      if (13 === e.keyCode && !e.ctrlKey) {
+      if (13 === e.keyCode && !(e.ctrlKey || e.shiftKey)) {
         this.sendMessage();
       }
-      if (13 === e.keyCode && e.ctrlKey) {
+      if (13 === e.keyCode && (e.ctrlKey || e.shiftKey)) {
         this.content = this.content + "\n";
       }
     },
