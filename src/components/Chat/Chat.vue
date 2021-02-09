@@ -452,7 +452,6 @@ export default {
   width: 100%;
   border-bottom-right-radius: 4px;
   padding-bottom: 10px;
-  z-index: 10;
 }
 
 .vac-box-footer {
