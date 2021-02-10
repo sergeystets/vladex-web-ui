@@ -102,11 +102,23 @@ export default {
     },
     chatName() {
       let activeChat = this.$store.getters.activeChat;
-      return activeChat === undefined ? "" : activeChat.name;
+
+      if (activeChat !== undefined) {
+        return activeChat.peerToPeer ?
+            activeChat.members.find(m => m.id !== this.$store.getters.user.id).username :
+            activeChat.name;
+      }
+      return "";
     },
     chatStatus() {
       let activeChat = this.$store.getters.activeChat;
-      return activeChat === undefined || !activeChat.online ? "" : "(online)";
+
+      if (activeChat !== undefined) {
+        return activeChat.peerToPeer ?
+            (activeChat.members.find(m => m.id !== this.$store.getters.user.id).online ? "(online)" : "") : "";
+
+      }
+      return "";
     },
     userIsAuthenticated() {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined;

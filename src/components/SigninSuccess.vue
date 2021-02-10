@@ -37,7 +37,7 @@ export default {
   watch: {
     user(user) {
       if (user) {
-        this.$router.push('/chat/' + user.chatIdToLoad)
+        this.$router.push('/');
       }
     }
   }

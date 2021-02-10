@@ -4,7 +4,7 @@
                  v-for="chat in chats" v-bind:key="chat.name"
                  v-on:click="onChatClicked(chat)">
       <v-list-item-content>
-        <v-list-item-title v-text="chat.name"></v-list-item-title>
+        <v-list-item-title v-text="getChatName(chat)"></v-list-item-title>
       </v-list-item-content>
       <v-list-item-action>
         <!--online-->
@@ -31,6 +31,9 @@ export default {
     }
   },
   methods: {
+    getChatName(chat) {
+      return !chat.peerToPeer ? chat.name : chat.members.find(m => m.id !== this.$store.getters.user.id).username;
+    },
     onChatClicked(chat) {
       if (this.$store.getters.activeChatId === chat.id && !this.$store.getters.isMobile) {
         return;
