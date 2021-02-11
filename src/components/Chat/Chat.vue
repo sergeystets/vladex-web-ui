@@ -16,7 +16,7 @@
             <v-btn @click="createChatDialog = !createChatDialog"
                    v-show="isMobile & showRoomsList && scrollUp"
                    style="bottom: 32px"
-                   color="blue"
+                   color="#2d83c4"
                    dark
                    absolute
                    bottom
@@ -34,7 +34,7 @@
           >
 
             <v-card>
-              <v-toolbar color="#1976d2" fixed>
+              <v-toolbar color="#2d83c4" fixed>
                 <v-btn icon dark @click="createChatDialog = false">
                   <v-icon>close</v-icon>
                 </v-btn>
@@ -205,7 +205,7 @@ export default {
   },
   watch: {
     '$route.params.id'() {
-      this.$store.dispatch("chatOpened", Number.parseInt(this.id));
+      this.$store.dispatch("chatOpened", this.id ? Number.parseInt(this.id) : undefined);
       this.loadChat()
     },
     activeChatNewMessage(payload) {
@@ -256,11 +256,13 @@ export default {
         this.$store.dispatch("updateShowRoomsList", false)
       }
       this.chatMessages = [];
-      return api.loadChatMessages(this.$store.getters.user.token, this.id).then(result => {
-        result.data.forEach(message => {
-          this.chatMessages.push(this.formatMessage(message));
-        });
-      })
+      if (this.id) {
+        return api.loadChatMessages(this.$store.getters.user.token, this.id).then(result => {
+          result.data.forEach(message => {
+            this.chatMessages.push(this.formatMessage(message));
+          });
+        })
+      }
     },
 
     scrollToEnd() {

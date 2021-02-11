@@ -30,7 +30,7 @@ const ChatModule = {
     }
   },
   actions: {
-    updateShowRoomsList(context, showRoomsList){
+    updateShowRoomsList(context, showRoomsList) {
       context.commit("setShowRoomsList", showRoomsList);
     },
     goBackToRoomsList(context) {
@@ -44,6 +44,11 @@ const ChatModule = {
       context.commit("setIsMobile", mobile);
     },
     chatOpened(context, payload) {
+      if (payload === undefined) {
+        context.commit('setActiveChat', undefined);
+        context.commit("setActiveChatId", undefined)
+        return
+      }
       console.log("chat " + payload + " was opened and is now active");
       context.commit("setActiveChatId", payload)
       let activeChat = context.getters.chats.filter(chat => chat.id === payload);

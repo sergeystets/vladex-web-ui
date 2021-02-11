@@ -3,6 +3,21 @@
     <v-list-item :class="{'vac-chat-message-mobile': isMobile}"
                  v-for="chat in chats" v-bind:key="chat.name"
                  v-on:click="onChatClicked(chat)">
+
+      <!--Chat avatar -->
+      <v-badge v-if="chat.peerToPeer"
+               bordered
+               bottom
+               :color="chat.members.find(m => m.id !== user.id).online ? 'green accent-4' : 'grey lighten-2'"
+               dot
+               offset-x="10"
+               offset-y="10"
+      >
+        <v-list-item-avatar>
+          <img :src="chat.members.find(m => m.id !== user.id).avatar" alt="avatar"/>
+        </v-list-item-avatar>
+      </v-badge>
+
       <v-list-item-content>
         <v-list-item-title v-text="getChatName(chat)"></v-list-item-title>
       </v-list-item-content>
@@ -25,6 +40,9 @@ export default {
   computed: {
     chats() {
       return this.$store.getters.chats
+    },
+    user() {
+      return this.$store.getters.user;
     },
     isMobile() {
       return this.$store.getters.isMobile;

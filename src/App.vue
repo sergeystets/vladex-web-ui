@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-if="!(isMobile && !showRoomsList)" absolute temporary v-model="drawerToggle">
+    <v-navigation-drawer style="color: white" v-if="!(isMobile && !showRoomsList)" absolute temporary
+                         v-model="drawerToggle">
       <v-list>
         <v-list-item>
           <v-list-item-action>
@@ -38,22 +39,21 @@
         </v-list-item-content>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app class="light-blue darken-1">
-      <v-app-bar-nav-icon v-if="isMobile && !showRoomsList" @click.native.stop="goBackToRoomsList">
+    <v-app-bar style="background-color: #2d83c4" app>
+      <v-app-bar-nav-icon class="white--text" v-if="isMobile && !showRoomsList" @click.native.stop="goBackToRoomsList">
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-nav-icon v-else @click.native.stop="drawerToggle = !drawerToggle">
       </v-app-bar-nav-icon>
       <v-toolbar-title v-show="!isMobile || showRoomsList">
-        <router-link to="/" tag="span" style="cursor: pointer">Vladex
-        </router-link>
+        <router-link :to="isMobile? '': '/'" tag="span" style="color: #fff; cursor: pointer">Vladex</router-link>
       </v-toolbar-title>
       <div v-show="(isMobile && !showRoomsList) || !isMobile"
-           :style="{'padding-left': !isMobile? '110px': '20px'}"> {{ chatName }} {{ chatStatus }}
+           :style="{'padding-left': !isMobile? '200px': '20px', 'color': '#fff'}"> {{ chatName }} {{ chatStatus }}
       </div>
       <v-spacer></v-spacer>
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
-        <v-btn text :key="item.title" :to="item.route">
+        <v-btn style="min-width: 0; padding: 0; color: #fff;" text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
           <div class="hidden-xs-only">{{ $t('label.button.search') }}</div>
         </v-btn>
@@ -129,3 +129,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.mdi-menu::before {
+  color: white;
+}
+</style>
