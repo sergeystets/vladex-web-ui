@@ -29,8 +29,8 @@ export default {
     });
   },
 
-  loadChat(token, id) {
-    return AXIOS.get("/v1/chat/" + id, {
+  loadChatMessages(token, id) {
+    return AXIOS.get("/v1/chat/" + id + "/messages", {
       headers: {
         'Authorization': 'Bearer ' + token.access_token
       }

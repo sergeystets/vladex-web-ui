@@ -256,7 +256,7 @@ export default {
         this.$store.dispatch("updateShowRoomsList", false)
       }
       this.chatMessages = [];
-      return api.loadChat(this.$store.getters.user.token, this.id).then(result => {
+      return api.loadChatMessages(this.$store.getters.user.token, this.id).then(result => {
         result.data.forEach(message => {
           this.chatMessages.push(this.formatMessage(message));
         });
@@ -271,7 +271,7 @@ export default {
     },
 
     formatMessage(message) {
-      let date = message.timestamp ? new Date(message.timestamp * 1000) : new Date();
+      let date = message.timestamp ? new Date(message.timestamp) : new Date();
       const options = {month: 'long', year: 'numeric', day: 'numeric'}
       message.date = new Intl.DateTimeFormat(navigator.language.split('-')[0], options).format(date);
       message.timestampMinutesAndSeconds = date.getHours() + ":" + date.getMinutes();
