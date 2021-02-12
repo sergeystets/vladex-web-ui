@@ -201,6 +201,9 @@ export default {
     },
     activeChatNewMessage() {
       return this.$store.getters.activeChatNewMessage;
+    },
+    webSocketState() {
+      return this.$store.getters.webSocketState;
     }
   },
   watch: {
@@ -208,13 +211,22 @@ export default {
       this.$store.dispatch("chatOpened", this.id ? Number.parseInt(this.id) : undefined);
       this.loadChat()
     },
+    webSocketState(wsState) {
+      if (wsState === "CONNECTION_FAILED") {
+        console.log("[ws] Re-connecting in 10 seconds...")
+        let that = this;
+        setTimeout(function () {
+          that.$store.dispatch('connect');
+        }, 10000);
+      }
+    },
     activeChatNewMessage(payload) {
       if (payload.chatId === Number.parseInt(this.id)) {
         this.chatMessages.push(this.formatMessage(payload));
       }
     },
     chats: function (newValue, oldValue) {
-      if ((oldValue === undefined || oldValue.length === 0) && newValue) {
+      if ((oldValue === undefined || oldValue.length === 0) && newValue && this.id) {
         this.$store.dispatch("chatOpened", Number.parseInt(this.id));
       }
     }

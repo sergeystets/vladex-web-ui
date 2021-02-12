@@ -5,7 +5,7 @@ const WsModule = {
   state: {
     socket: {},
     stompClient: {},
-    webSocketConnected: false
+    webSocketState: "DISCONNECTED"
   },
   mutations: {
     setSocket(state, payload) {
@@ -14,23 +14,25 @@ const WsModule = {
     setStompClient(state, payload) {
       state.stompClient = payload
     },
-    setWebSocketConnected(state, payload) {
-      state.webSocketConnected = payload
+    setWebSocketState(state, payload) {
+      state.webSocketState = payload
     }
   },
   actions: {
     connect(context) {
-      if (this.getters.webSocketConnected) {
+      if (this.getters.webSocketState === "CONNECTED" && this.getters.webSocketState === "CONNECTING") {
         return;
       }
       let socket = new SockJS(process.env.VUE_APP_SERVER_URL + "/api/ws");
-      let stompClient = Stomp.over(socket);
+      let stompClient = Stomp.over(socket, {protocols: ["v12.stomp"]});
+      context.commit("setWebSocketState", "CONNECTING");
+      console.log("[ws] connecting...")
       stompClient.connect(
           {"X-Authorization": "Bearer " + context.getters.user.token.access_token},
           frame => {
             context.commit("setSocket", socket);
             context.commit("setStompClient", stompClient);
-            context.commit("setWebSocketConnected", true);
+            context.commit("setWebSocketState", "CONNECTED");
             console.log("[ws][connect-frame] " + frame);
             stompClient.subscribe("/topic/presence", tick => {
               console.log("[ws][tick][/topic/presence] " + tick);
@@ -46,8 +48,8 @@ const WsModule = {
             });
           },
           error => {
-            console.log("[ws][error] " + error);
-            context.commit("setWebSocketConnected", false);
+            console.log("[ws] Connection failed: " + JSON.stringify(error));
+            context.commit("setWebSocketState", "CONNECTION_FAILED");
           }
       );
     },
@@ -60,8 +62,8 @@ const WsModule = {
     stompClient(state) {
       return state.stompClient;
     },
-    webSocketConnected(state) {
-      return state.webSocketConnected;
+    webSocketState(state) {
+      return state.webSocketState;
     }
   }
 }

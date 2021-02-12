@@ -49,7 +49,9 @@
         <router-link :to="isMobile? '': '/'" tag="span" style="color: #fff; cursor: pointer">Vladex</router-link>
       </v-toolbar-title>
       <div v-show="(isMobile && !showRoomsList) || !isMobile"
-           :style="{'padding-left': !isMobile? '200px': '20px', 'color': '#fff'}"> {{ chatName }} {{ chatStatus }}
+           :style="{'padding-left': !isMobile? '200px': '20px', 'color': '#fff'}">
+        <span v-if="webSocketState === 'CONNECTION_FAILED'">Reconnecting...</span>
+        <span v-else>{{ chatName }} {{ chatStatus }}</span>
       </div>
       <v-spacer></v-spacer>
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
@@ -122,6 +124,9 @@ export default {
     },
     userIsAuthenticated() {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined;
+    },
+    webSocketState() {
+      return this.$store.getters.webSocketState;
     },
     contacts() {
       return this.$store.getters.contacts;
