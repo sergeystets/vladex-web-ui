@@ -9,7 +9,7 @@
           class="subtitle-1 text-center"
           cols="12"
       >
-        Sign-in success, redirecting to home page...
+        {{ $t('text.redirecting.to.home.page') }}
       </v-col>
       <v-col cols="6">
         <v-progress-linear
