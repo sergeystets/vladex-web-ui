@@ -6,5 +6,6 @@
   "label.create.new.chat": "Создание нового чата",
   "label.cancel.new.chat.dialog": "Отменить",
   "label.new.chat.dialog.selected": "Выбрано",
-  "text.no.chats.selected": "Пожалуйста, выберете чат, чтобы начать общение"
+  "text.no.chats.selected": "Пожалуйста, выберите чат, чтобы начать общение",
+  "text.redirecting.to.sign-in.page":"Перенапрявляем на страничку логина..."
 }

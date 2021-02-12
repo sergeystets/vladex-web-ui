@@ -6,5 +6,6 @@
   "label.create.new.chat": "Create new chat",
   "label.cancel.new.chat.dialog": "Cancel",
   "label.new.chat.dialog.selected": "Selected",
-  "text.no.chats.selected": "Please select a chat to start messaging"
+  "text.no.chats.selected": "Please select a chat to start messaging",
+  "text.redirecting.to.sign-in.page": "Redirecting to sign-in page..."
 }

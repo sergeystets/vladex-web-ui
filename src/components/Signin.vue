@@ -9,7 +9,7 @@
           class="subtitle-1 text-center"
           cols="12"
       >
-        Redirecting to sign-in page...
+        {{ $t('text.redirecting.to.sign-in.page') }}
       </v-col>
       <v-col cols="6">
         <v-progress-linear
