@@ -13,7 +13,7 @@
 
           <!-- Create new chat button (mobile only)-->
           <v-fab-transition>
-            <v-btn @click="createChatDialog = !createChatDialog"
+            <v-btn @click="onAddNewGroupDialogClicked"
                    v-show="isMobile & showRoomsList && scrollUp"
                    style="bottom: 32px"
                    color="#2d83c4"
@@ -87,7 +87,7 @@
                 <v-btn
                     text
                     color="primary"
-                    @click="createChatDialog = false; newChatMembers = [];"
+                    @click="cancelAddNewGroupDialog"
                 >
                   {{ $t('label.cancel.new.chat.dialog') }}
                 </v-btn>
@@ -244,6 +244,14 @@ export default {
       if (13 === e.keyCode && (e.ctrlKey || e.shiftKey)) {
         this.content = this.content + "\n";
       }
+    },
+    cancelAddNewGroupDialog() {
+        this.createChatDialog = false;
+        this.newChatMembers = [];
+    },
+    onAddNewGroupDialogClicked() {
+        this.createChatDialog = !this.createChatDialog;
+        this.newChatMembers = [];
     },
     addOrRemoveNewChatMember(id) {
       if (this.newChatMembers.some((el) => el === id)) {
