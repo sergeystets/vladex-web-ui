@@ -7,6 +7,6 @@
   "label.cancel.new.chat.dialog": "Отменить",
   "label.new.chat.dialog.selected": "Выбрано",
   "text.no.chats.selected": "Пожалуйста, выберите чат, чтобы начать общение",
-  "text.redirecting.to.sign-in.page":"Перенапрявляем на страничку логина...",
-  "text.redirecting.to.home.page":"Перенапрявляем на домашнюю страницу..."
+  "text.redirecting.to.sign-in.page":"Перенаправляем на страницу логина...",
+  "text.redirecting.to.home.page":"Перенаправляем на домашнюю страницу..."
 }
