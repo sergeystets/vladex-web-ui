@@ -50,7 +50,7 @@
       </v-toolbar-title>
       <div v-show="(isMobile && !showRoomsList) || !isMobile"
            :style="{'padding-left': !isMobile? '200px': '20px', 'color': '#fff'}">
-        <span v-if="webSocketState === 'CONNECTION_FAILED'">Reconnecting...</span>
+        <span v-if="webSocketState !== 'CONNECTED'">{{ $t('text.connecting') }}</span>
         <span v-else>{{ chatName }} {{ chatStatus }}</span>
       </div>
       <v-spacer></v-spacer>

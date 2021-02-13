@@ -8,5 +8,6 @@
   "label.new.chat.dialog.selected": "Выбрано",
   "text.no.chats.selected": "Пожалуйста, выберите чат, чтобы начать общение",
   "text.redirecting.to.sign-in.page":"Перенаправляем на страницу логина...",
-  "text.redirecting.to.home.page":"Перенаправляем на домашнюю страницу..."
+  "text.redirecting.to.home.page":"Перенаправляем на домашнюю страницу...",
+  "text.connecting": "Подключение..."
 }
