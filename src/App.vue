@@ -54,6 +54,11 @@
         <span v-else>{{ chatName }} {{ chatStatus }}</span>
       </div>
       <v-spacer></v-spacer>
+      <!-- video call button -->
+      <v-btn :to="startVideoCallLink" v-show="((isMobile && !showRoomsList) || !isMobile) && activeChat" style="min-width: 0; padding-right: 2px; color: #fff;" text>
+        <v-icon left>mdi-video</v-icon>
+      </v-btn>
+      <!--menu items -->
       <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
         <v-btn style="min-width: 0; padding: 0; color: #fff;" text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
@@ -84,6 +89,12 @@ export default {
     }
   },
   computed: {
+    startVideoCallLink() {
+      return this.$store.getters.activeChat === undefined ? "#" : "/chat/" + this.$store.getters.activeChat.id + "/video";
+    },
+    activeChat() {
+      return this.$store.getters.activeChat;
+    },
     isMobile() {
       return this.$store.getters.isMobile;
     },
