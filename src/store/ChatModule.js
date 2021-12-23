@@ -7,7 +7,10 @@ const ChatModule = {
     activeChat: undefined,
     activeChatNewMessage: {},
     isMobile: false,
-    showRoomsList: true
+    showRoomsList: true,
+    offer: undefined,
+    answer: undefined,
+    iceCandidate: undefined,
   },
   mutations: {
     setActiveChatId(state, payload) {
@@ -25,11 +28,29 @@ const ChatModule = {
     setChats(state, payload) {
       state.chats = payload
     },
+    setOffer(state, payload) {
+      state.offer = payload;
+    },
+    setAnswer(state, payload) {
+      state.answer = payload;
+    },
+    setIceCandidate(state, payload){
+      state.iceCandidate = payload;
+    },
     setActiveChatNewMessage(state, payload) {
       state.activeChatNewMessage = payload
     }
   },
   actions: {
+    onSignalingOfferReceived(context, offer) {
+      context.commit("setOffer", offer);
+    },
+    onSignalingAnswerReceived(context, answer) {
+      context.commit("setAnswer", answer);
+    },
+    onSignalingIceCandidateReceived(context, iceCandidate) {
+      context.commit("setIceCandidate", iceCandidate);
+    },
     updateShowRoomsList(context, showRoomsList) {
       context.commit("setShowRoomsList", showRoomsList);
     },
@@ -90,6 +111,15 @@ const ChatModule = {
   getters: {
     isMobile(state) {
       return state.isMobile;
+    },
+    getOffer(state) {
+      return state.offer;
+    },
+    getIceCandidate(state) {
+      return state.iceCandidate;
+    },
+    getAnswer(state) {
+      return state.answer;
     },
     showRoomsList(state) {
       return state.showRoomsList;

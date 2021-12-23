@@ -46,6 +46,27 @@ const WsModule = {
               let message = JSON.parse(tick.body);
               context.dispatch('onNewMessageReceived', message)
             });
+
+            console.log("subscribing to '/user/queue/signaling-offer'...")
+            stompClient.subscribe("/user/queue/signaling-offer", tick => {
+              console.log("received tick from /user/queue/signaling-offer " + tick);
+              let offer = JSON.parse(tick.body);
+              context.dispatch('onSignalingOfferReceived', offer)
+            });
+
+            console.log("subscribing to '/user/queue/signaling-answer'...")
+            stompClient.subscribe("/user/queue/signaling-answer", tick => {
+              console.log("received tick from /user/queue/signaling-answer " + tick);
+              let answer = JSON.parse(tick.body);
+              context.dispatch('onSignalingAnswerReceived', answer)
+            });
+
+            console.log("subscribing to '/user/queue/signaling-ice-candidate'...")
+            stompClient.subscribe("/user/queue/signaling-ice-candidate", tick => {
+              console.log("received tick from /user/queue/signaling-ice-candidate " + tick);
+              let iceCandidate = JSON.parse(tick.body);
+              context.dispatch('onSignalingIceCandidateReceived', iceCandidate)
+            });
           },
           error => {
             console.log("[ws] Connection failed: " + JSON.stringify(error));
